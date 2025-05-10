@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Key của bạn</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #ffe4ec, #e0f7fa, #f3e5f5);
+      font-family: 'Poppins', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      background: #ffffffcc;
+      border-radius: 20px;
+      padding: 40px 30px;
+      box-shadow: 0 0 30px rgba(255, 182, 193, 0.6);
+      text-align: center;
+      max-width: 90%;
+      transform: scale(0.8);
+      opacity: 0;
+      border: 2px solid #ffb6c1;
+    }
+
+    .title {
+      font-size: 1.8em;
+      color: #ff69b4;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    .key-text {
+      font-size: 1.3em;
+      color: #6a1b9a;
+      background: #fce4ec;
+      padding: 15px 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(186, 104, 200, 0.3);
+      margin-bottom: 20px;
+      word-break: break-word;
+      border: 1px dashed #ce93d8;
+    }
+
+    .copy-btn {
+      background: linear-gradient(145deg, #ff80ab, #ffb6c1);
+      border: none;
+      color: white;
+      padding: 12px 28px;
+      font-size: 1em;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(255, 105, 180, 0.4);
+    }
+
+    .copy-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 18px rgba(255, 105, 180, 0.6);
+    }
+
+    .copied {
+      font-size: 0.9em;
+      color: #66bb6a;
+      margin-top: 10px;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="container">
+    <div class="title">Lấy Key</div>
+    <div class="key-text" id="keyText">Đang kiểm tra key...</div>
+    <button class="copy-btn" id="copyBtn" style="display: none;">Copy Key</button>
+    <div class="copied" id="copied">Đã copy rồi đó!</div>
+  </div>
+
+  <script>
+    function getKeyFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("key");
+    }
+
+    const key = getKeyFromURL();
+    const keyText = document.getElementById("keyText");
+    const copyBtn = document.getElementById("copyBtn");
+    const copied = document.getElementById("copied");
+    const container = document.getElementById("container");
+
+    if (key) {
+      keyText.textContent = key;
+      copyBtn.style.display = "inline-block";
+    } else {
+      keyText.textContent = "Không tìm thấy key nào...";
+    }
+
+    // Hiệu ứng xuất hiện
+    gsap.to(container, {
+      duration: 1,
+      opacity: 1,
+      scale: 1,
+      ease: "elastic.out(1, 0.6)"
+    });
+
+    // Sự kiện copy
+    copyBtn.addEventListener("click", () => {
+      navigator.clipboard.writeText(key).then(() => {
+        gsap.fromTo(copied, { opacity: 0, y: -10 }, { opacity: 1, y: 0, duration: 0.5 });
+        setTimeout(() => {
+          gsap.to(copied, { opacity: 0, duration: 0.5 });
+        }, 1500);
+      });
+    });
+  </script>
+</body>
+</html>
